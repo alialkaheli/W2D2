@@ -11,9 +11,9 @@ class Board
     @grid.each_with_index do |row,idx|
       row.each_with_index do |cell, idx2|
         if idx ==0 || idx ==1 || idx== 6 || idx == 7
-          @grid[idx][idx2] = Piece.new([idx, idx2], @grid, " ♟ ")
+          @grid[idx][idx2] = Piece.new([idx, idx2], self, " ♟ ", "white")
         else
-          @grid[idx][idx2] = NullPiece.new([idx, idx2], @grid, "   ")
+          @grid[idx][idx2] = NullPiece.new([idx, idx2], self, "   ", "white")
         end
          
       end 
@@ -40,12 +40,24 @@ class Board
     self[start_pos], self[end_pos] = self[end_pos], self[start_pos]  
   end 
   
-  def self.is_valid?(start_pos, end_pos)
-    return false if end_pos[0] >= 8 ||end_pos[0] < 0 || end_pos[1] >= 8 ||end_pos[1] < 0
+  def is_within_range?(end_pos)
+    return false if end_pos[0] >= 8 || end_pos[0] < 0 || end_pos[1] >= 8 || end_pos[1] < 0
     return true
   end 
     
 end
 
 
+class Test
+  include SlidingPiece
+  attr_reader :tmp
+  
+  def initialize
+    b = Board.new
+    @tmp = move(b, [3, 3], DIAGONAL + MOVES)
+  end
+  
+end
 
+t = Test.new
+p t.tmp

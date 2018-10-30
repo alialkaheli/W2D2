@@ -94,7 +94,7 @@ class Cursor
   def update_pos(diff)
     x = @cursor_pos[0] + MOVES[diff][0]
     y = @cursor_pos[1] + MOVES[diff][1]
-    if Board.is_valid?(@cursor_pos, [x,y])
+    if @board.is_within_range?([x,y])
       @cursor_pos = [x, y]
     end
   end
