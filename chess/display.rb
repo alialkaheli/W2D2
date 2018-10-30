@@ -1,9 +1,44 @@
 require_relative 'board.rb'
 require_relative 'cursor.rb'
 require 'colorize'
+require 'byebug'
 
 class Display 
-  def initialize
-    @cursor = Cursor.new([0,0])
+  attr_reader :cursor
+  
+  def initialize(board = Board.new)
+    @board = board
+    @cursor = Cursor.new([0,0], board)
   end
+  
+  def render
+    @board.grid.each_with_index do |row,idx|
+      row.each_with_index do |cell,idx2| 
+        if [idx, idx2] == @cursor.cursor_pos
+          if !@cursor.selected
+            print cell.symbol.colorize(:background => :red )
+          else
+            print cell.symbol.colorize(:background => :purple ) 
+          end
+          next
+        end
+          
+        if (idx + idx2).even? 
+          print cell.symbol.colorize(:background => :green )
+        elsif (idx + idx2).odd? 
+          print cell.symbol.colorize(:background => :blue)  
+        end   
+      end
+      puts  
+    end
+    nil
+  end 
 end 
+
+d = Display.new
+while true
+  d.render
+  d.cursor.get_input
+  puts
+  puts
+end
