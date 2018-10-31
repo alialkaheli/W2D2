@@ -4,7 +4,7 @@ require 'colorize'
 require 'byebug'
 
 class Display 
-  attr_reader :cursor
+  attr_reader :cursor, :board
   
   def initialize(board = Board.new)
     @board = board
@@ -14,12 +14,18 @@ class Display
   def render
     @board.grid.each_with_index do |row,idx|
       row.each_with_index do |cell,idx2| 
+        # if @cursor.previous_selected.empty?
+        #   @cursor.previous_selected = [idx, idx2]
+        #   @cursor.previous_selected = cell.symbol.colorize(:background => :purple )
+        # end
+        
+        if [idx, idx2] == @cursor.previous_selected
+          print cell.symbol.colorize(:background => :magenta ) 
+          next
+        end
+        
         if [idx, idx2] == @cursor.cursor_pos
-          if !@cursor.selected
-            print cell.symbol.colorize(:background => :red )
-          else
-            print cell.symbol.colorize(:background => :purple ) 
-          end
+          print cell.symbol.colorize(:background => :red ) 
           next
         end
           
@@ -42,3 +48,4 @@ while true
   puts
   puts
 end
+

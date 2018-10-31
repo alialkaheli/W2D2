@@ -32,13 +32,14 @@ MOVES = {
 }
 
 class Cursor
-
   attr_reader :cursor_pos, :board, :selected
+  attr_accessor :previous_selected
 
   def initialize(cursor_pos, board)
     @cursor_pos = cursor_pos
     @board = board
     @selected = false
+    @previous_selected = []
   end
 
   def get_input
@@ -79,10 +80,17 @@ class Cursor
       
   # fix the selected
   def handle_key(key)
-    @selected = false
     case key
+      
     when :return, :space
-      @selected = true
+      if !@selected
+        @selected = true
+        @previous_selected = @cursor_pos.dup
+      else
+        @board.move_piece(@previous_selected, @cursor_pos)
+        @selected = false
+        @previous_selected = []
+      end
       return @cursor_pos
     when :left, :right, :up, :down
       update_pos(key)
